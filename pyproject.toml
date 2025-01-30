@@ -1,13 +1,14 @@
 [project]
-name = "lfs-gcs"
+name = "git-lfs-gcs"
 version = "0.1"
 authors = [{name="Igor Kozyrenko", email = "igor@ikseek.com"}]
 dependencies = [
     "google-cloud-storage >= 3.0"
 ]
 requires-python = ">=3.9"
+
 [project.scripts]
-lfs-gcs = "lfs_gcs:main"
+git-lfs-gcs = "git_lfs_gcs:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
