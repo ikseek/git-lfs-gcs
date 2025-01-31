@@ -35,7 +35,7 @@ class GCSTransport:
 
     def download(self, oid: str, size: int, action=None) -> Generator[dict, None, None]:
         del size, action
-        file_uri = join(self.url, oid)
+        file_uri = self.oid_url(oid)
         download_path = Path(f"lfs-download-{oid}.tmp").absolute()
         logger.debug("Downloading %s to %s", file_uri, download_path)
         with Blob.from_uri(file_uri, client=self.client()).open("rb") as src:
@@ -47,12 +47,15 @@ class GCSTransport:
         self, oid: str, path: str, size: int, action=None
     ) -> Generator[dict, None, None]:
         del size, action
-        file_uri = join(self.url, oid)
+        file_uri = self.oid_url(oid)
         logger.debug("Uploading %s", file_uri)
         with open(path, "rb") as src:
             with Blob.from_uri(file_uri, client=self.client()).open("wb") as dst:
                 yield from transfer(oid, src, dst)
         yield {"event": "complete", "oid": oid}
+
+    def oid_url(self, oid: str) -> str:
+        return join(self.url, f"{oid[0:2]}/{oid[2:4]}/{oid}")
 
 
 def main():
